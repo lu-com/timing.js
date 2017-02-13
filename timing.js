@@ -112,7 +112,47 @@
          */
         printSimpleTable: function() {
             this.printTable({simple: true});
-        }
+        },
+        /**
+         * judge if the browser has cached the resources
+         * @author fanke
+         * @date   2017-02-13
+         * @return {Boolean}  [description]
+         */
+        isCache: function() {
+            var performance = window.performance || window.webkitPerformance || window.msPerformance || window.mozPerformance;
+
+            if (performance === undefined) {
+                return false;
+            }
+
+            var isCache = true;
+            var resourceList = performance.getEntries() || [];
+            for(var i=0; i < resourceList.length; i++) {
+                if(resourceList[i].connectEnd === resourceList[i].connectStart) {
+                    isCache = false;
+                    break;
+                }
+            }
+
+            return isCache;
+        },
+        getTime: function() {
+            var apiData = this.getTimes() || {};
+
+            var timingData = {
+                firstPaintTime: apiData.firstPaintTime,
+                lookupDomainTime: apiData.lookupDomainTime,
+                connectTime: apiData.connectTime,
+                requestTime: apiData.requestTime,
+                initDomTreeTime: apiData.initDomTreeTime,
+                domReadyTime: apiData.domReadyTime,
+                loadTime: apiData.loadTime,
+                redirectTime: apiData.redirectTime,
+            };
+
+            return apiData;
+        },
     };
 
     function isNumeric(n) {
