@@ -34,7 +34,10 @@ By default, running the script will print out a summary table of measurements. T
 Get measurements:
 
 ```sh
-timing.getTimes();
+timing.getAll();
+timing.getTime();
+timing.isCached();
+timing.getReourceTime();
 ```
 
 Print a summary table of measurements (uses [console.table()](https://plus.google.com/+AddyOsmani/posts/PmTC5wwJVEc)):

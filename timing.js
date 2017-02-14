@@ -1,13 +1,12 @@
 /**
- * Timing.js 1.2.0
- * Copyright 2016 Addy Osmani
+ * Timing.js 1.3.0
  */
 (function(window) {
     'use strict';
 
     /**
      * Navigation Timing API helpers
-     * timing.getTimes();
+     * timing.getAll();
      **/
     window.timing = window.timing || {
         /**
@@ -15,7 +14,7 @@
          * @param  Object opts Options (simple (bool) - opts out of full data view)
          * @return Object      measurements
          */
-        getTimes: function(opts) {
+        getAll: function(opts) {
             var performance = window.performance || window.webkitPerformance || window.msPerformance || window.mozPerformance;
 
             if (performance === undefined) {
@@ -98,7 +97,7 @@
          */
         printTable: function(opts) {
             var table = {};
-            var data  = this.getTimes(opts) || {};
+            var data  = this.getAll(opts) || {};
             Object.keys(data).sort().forEach(function(k) {
                 table[k] = {
                     ms: data[k],
@@ -114,15 +113,15 @@
             this.printTable({simple: true});
         },
         /**
-         * judge if the browser has cached the resources
+         * judge if the browser has cached the resources, does not support safari&opera
          * @author fanke
          * @date   2017-02-13
          * @return {Boolean}  [description]
          */
-        isCache: function() {
+        isCached: function() {
             var performance = window.performance || window.webkitPerformance || window.msPerformance || window.mozPerformance;
 
-            if (performance === undefined) {
+            if (performance === undefined || performance.getEntries === undefined) {
                 return false;
             }
 
@@ -138,21 +137,33 @@
             return isCache;
         },
         getTime: function() {
-            var apiData = this.getTimes() || {};
+            var apiData = this.getAll() || {};
 
             var timingData = {
-                firstPaintTime: apiData.firstPaintTime,
-                lookupDomainTime: apiData.lookupDomainTime,
+                appcacheTime: apiData.appcacheTime,
                 connectTime: apiData.connectTime,
-                requestTime: apiData.requestTime,
-                initDomTreeTime: apiData.initDomTreeTime,
                 domReadyTime: apiData.domReadyTime,
+                firstPaintTime: apiData.firstPaintTime,
+                initDomTreeTime: apiData.initDomTreeTime,
+                loadEventTime: apiData.loadEventTime,
                 loadTime: apiData.loadTime,
+                lookupDomainTime: apiData.lookupDomainTime,
                 redirectTime: apiData.redirectTime,
+                requestTime: apiData.requestTime,
+                unloadEventTime: apiData.unloadEventTime,
             };
 
-            return apiData;
+            return timingData;
         },
+        getReourceTime: function() {
+            var performance = window.performance || window.webkitPerformance || window.msPerformance || window.mozPerformance;
+
+            if (performance === undefined || performance.getEntries === undefined) {
+                return false;
+            }
+
+            return performance.getEntries();
+        }
     };
 
     function isNumeric(n) {
