@@ -112,30 +112,6 @@
         printSimpleTable: function() {
             this.printTable({simple: true});
         },
-        /**
-         * judge if the browser has cached the resources, does not support safari&opera
-         * @author fanke
-         * @date   2017-02-13
-         * @return {Boolean}  [description]
-         */
-        isCached: function() {
-            var performance = window.performance || window.webkitPerformance || window.msPerformance || window.mozPerformance;
-
-            if (performance === undefined || performance.getEntries === undefined) {
-                return false;
-            }
-
-            var isCache = true;
-            var resourceList = performance.getEntries() || [];
-            for(var i=0; i < resourceList.length; i++) {
-                if(resourceList[i].connectEnd === resourceList[i].connectStart) {
-                    isCache = false;
-                    break;
-                }
-            }
-
-            return isCache;
-        },
         getTime: function() {
             var apiData = this.getAll() || {};
 
@@ -155,11 +131,11 @@
 
             return timingData;
         },
-        getReourceTime: function() {
+        getReourcesTime: function() {
             var performance = window.performance || window.webkitPerformance || window.msPerformance || window.mozPerformance;
 
             if (performance === undefined || performance.getEntries === undefined) {
-                return false;
+                return [];
             }
 
             return performance.getEntries();
